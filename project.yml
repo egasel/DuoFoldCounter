@@ -1,0 +1,74 @@
+# XcodeGen spec: run `xcodegen generate` to create FoldCounter.xcodeproj.
+name: FoldCounter
+options:
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    # Set these to your own reverse-DNS prefix and Apple developer team before
+    # building for a real phone. The App Group ID is derived from the prefix.
+    BUNDLE_ID_PREFIX: com.example
+    DEVELOPMENT_TEAM: ""
+    APP_GROUP_ID: group.$(BUNDLE_ID_PREFIX).FoldCounter
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "1"
+targets:
+  FoldCounter:
+    type: application
+    platform: iOS
+    sources: [App, Shared]
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: Fold Counter
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        AppGroupID: $(APP_GROUP_ID)
+    entitlements:
+      path: App/FoldCounter.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - $(APP_GROUP_ID)
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(BUNDLE_ID_PREFIX).FoldCounter
+    dependencies:
+      - target: FoldCounterWidget
+    scheme:
+      testTargets: [FoldCounterTests]
+  FoldCounterWidget:
+    type: app-extension
+    platform: iOS
+    sources: [Widget, Shared]
+    info:
+      path: Widget/Info.plist
+      properties:
+        CFBundleDisplayName: Fold Counter
+        AppGroupID: $(APP_GROUP_ID)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: Widget/FoldCounterWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - $(APP_GROUP_ID)
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(BUNDLE_ID_PREFIX).FoldCounter.Widget
+  FoldCounterTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: FoldCounter
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: $(BUNDLE_ID_PREFIX).FoldCounterTests
