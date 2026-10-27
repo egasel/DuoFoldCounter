@@ -2,13 +2,13 @@ import AppIntents
 import WidgetKit
 
 // iOS only lets an app watch the hinge while it is on screen, so counting is driven by
-// Shortcuts: the iPhone Duo "Opened" and "Closed" automations run these intents in the
+// Shortcuts: the "When iPhone is Opened / Closed" trigger runs these intents in the
 // background on every fold, whether or not the app is open.
 
 struct LogFoldOpenIntent: AppIntent {
     static let title: LocalizedStringResource = "Log Fold Open"
     static let description = IntentDescription(
-        "Adds one open to today's count and the all-time total. Run it from the iPhone Duo Opened automation."
+        "Adds one open to today's count and the all-time total. Run it from the When iPhone is Opened trigger."
     )
     static let openAppWhenRun = false
 
@@ -21,7 +21,7 @@ struct LogFoldOpenIntent: AppIntent {
 struct LogFoldCloseIntent: AppIntent {
     static let title: LocalizedStringResource = "Log Fold Close"
     static let description = IntentDescription(
-        "Adds one close to today's count and the all-time total. Run it from the iPhone Duo Closed automation."
+        "Adds one close to today's count and the all-time total. Run it from the When iPhone is Closed trigger."
     )
     static let openAppWhenRun = false
 

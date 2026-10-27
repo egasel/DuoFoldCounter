@@ -8,11 +8,10 @@ iOS doesn't let an app watch the hinge in the background. UIKit's `UIHingeIntera
 reports while the app is on screen, and extensions don't get hinge callbacks at all. So no app
 can stay running and count folds by itself.
 
-What *does* run on every fold is the Shortcuts app's iPhone Duo **Opened / Closed** automation
-trigger. This project hooks into it:
+What *does* run on every fold is the Shortcuts trigger **When iPhone is Opened / Closed**. This project hooks into it:
 
 ```
-fold the phone ──► Shortcuts "iPhone Duo is Closed" automation ──► Log Fold Close (this app, runs in background)
+fold the phone ──► Shortcuts "When iPhone is Closed" trigger ──► Log Fold Close (this app, runs in background)
                                                                      │
                                                        App Group storage (per-day counts)
                                                                      │
@@ -32,13 +31,13 @@ fold the phone ──► Shortcuts "iPhone Duo is Closed" automation ──► L
 This works today with nothing to install. Every fold adds one line to a text file. A second
 shortcut counts the lines.
 
-1. **Automation for opens.** Shortcuts → Automation → **+** → the iPhone Duo trigger → **Opened**
-   → **Run Immediately**, and turn off **Notify When Run**. Add these actions:
+1. **Shortcut for opens.** In Shortcuts, start a new shortcut and add the **When iPhone is Opened**
+   trigger. Leave **Automation** on and turn **Notify** off. Add these actions from the Search bar:
    - **Format Date**: Current Date, Custom format `yyyy-MM-dd`
    - **Text**: `Formatted Date open`. Put the *Formatted Date* variable, a space, then `open`.
    - **Append to Text File**: append *Text* to `FoldCounter/folds.txt` in the Shortcuts folder,
      with **Make New Line** on
-2. **Automation for closes.** Make the same automation with **Closed** and the word `close`.
+2. **Shortcut for closes.** Make the same shortcut with the trigger set to **Closed** and the word `close`.
 3. **Shortcut "Fold Stats"**, which you run when you want to see the counts:
    - **Get File from Folder**: `FoldCounter/folds.txt` in the Shortcuts folder
    - **Format Date**: Current Date, `yyyy-MM-dd`
@@ -63,8 +62,8 @@ account to install it on your phone.
 1. `brew install xcodegen`
 2. In `project.yml`, set `BUNDLE_ID_PREFIX` (for example `com.yourname`) and `DEVELOPMENT_TEAM`.
 3. Run `xcodegen generate`, open `FoldCounter.xcodeproj`, and run it on your iPhone Duo.
-4. In Shortcuts, create the two automations: **Opened** → *Log Fold Open*, **Closed** →
-   *Log Fold Close*. Choose **Run Immediately** and turn off **Notify When Run** for both.
+4. In Shortcuts, make two shortcuts: **When iPhone is Opened** → *Log Fold Open*, and
+   **When iPhone is Closed** → *Log Fold Close*. Leave **Automation** on and turn **Notify** off for both.
    The app shows these same steps.
 
 The counts are stored by local calendar day in the App Group, so the app and the widget read the
@@ -72,9 +71,8 @@ same data. "Today" resets at midnight, and the all-time total keeps growing.
 
 ## Things to check on the device
 
-These points come from early reports and haven't been confirmed on a real iPhone Duo yet:
+These points haven't been confirmed on a real iPhone Duo yet:
 
-- The exact wording of the Shortcuts trigger (reported as iPhone Duo *Opened* / *Closed*).
 - Whether the automation also fires while the phone is locked, or only after Face ID unlocks it.
 - iOS limits how often a widget can refresh, so on heavy days the widget may lag behind the app.
   The app always shows the exact count.

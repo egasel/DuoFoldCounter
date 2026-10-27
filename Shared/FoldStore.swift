@@ -1,6 +1,6 @@
 import Foundation
 
-/// One hinge event, as reported by the Shortcuts iPhone Duo "Opened" / "Closed" automations.
+/// One hinge event, as reported by the Shortcuts "When iPhone is Opened / Closed" trigger.
 enum FoldEvent: String, Codable, CaseIterable, Sendable {
     case open
     case close

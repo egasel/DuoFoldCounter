@@ -68,11 +68,11 @@ struct ContentView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             VStack(alignment: .leading, spacing: 6) {
-                Text("1. In Shortcuts, open the Automation tab and tap +.")
-                Text("2. Pick the iPhone Duo trigger and choose Opened.")
-                Text("3. Choose Run Immediately and turn off Notify When Run.")
+                Text("1. In Shortcuts, start a new shortcut.")
+                Text("2. Add the When iPhone is Opened trigger.")
+                Text("3. Leave Automation on and turn Notify off.")
                 Text("4. Add the Log Fold Open action from Fold Counter.")
-                Text("5. Do the same for Closed with Log Fold Close.")
+                Text("5. Make a second one for Closed with Log Fold Close.")
             }
             .font(.subheadline)
             Button("Open Shortcuts") {
