@@ -26,28 +26,24 @@ fold the phone ──► Shortcuts "When iPhone is Closed" trigger ──► Log
 | Shortcuts Opened/Closed automation ([Matthew Cassinelli](https://matthewcassinelli.com/iphone-duo-adds-a-shortcuts-automation-for-when-duo-is-opened-and-closed/), [Federico Viticci](https://x.com/viticci/status/2113320137042616559), [MacStories](https://www.macstories.net/stories/a-day-with-the-iphone-duo-first-impressions/)) | Yes | The system runs it. This project uses it. |
 | Keyboard or other extensions | No | [KeyboardKit found](https://keyboardkit.com/blog/2026/10/14/ios-keyboard-extensions-can-t-detect-the-iphone-duo-fold) extensions never get hinge callbacks. |
 
-## Option A: no Mac needed (Shortcuts only)
+## Option A: no Mac needed (Shortcuts + Scriptable)
 
-This works today with nothing to install. Every fold adds one line to a text file. A second
-shortcut counts the lines.
+This needs only the free [Scriptable](https://scriptable.app) app. Each shortcut has a single action
+that runs [`scriptable/FoldCounter.js`](scriptable/FoldCounter.js). The same script draws the widget.
 
-1. **Shortcut for opens.** In Shortcuts, start a new shortcut and add the **When iPhone is Opened**
-   trigger. Leave **Automation** on and turn **Notify** off. Add these actions from the Search bar:
-   - **Format Date**: Current Date, Custom format `yyyy-MM-dd`
-   - **Text**: `Formatted Date open`. Put the *Formatted Date* variable, a space, then `open`.
-   - **Append to Text File**: append *Text* to `FoldCounter/folds.txt` in the Shortcuts folder,
-     with **Make New Line** on
-2. **Shortcut for closes.** Make the same shortcut with the trigger set to **Closed** and the word `close`.
-3. **Shortcut "Fold Stats"**, which you run when you want to see the counts:
-   - **Get File from Folder**: `FoldCounter/folds.txt` in the Shortcuts folder
-   - **Format Date**: Current Date, `yyyy-MM-dd`
-   - **Match Text** `Formatted Date open` in *File* → **Count** → **Set Variable** `todayOpens`
-   - **Match Text** `Formatted Date close` in *File* → **Count** → **Set Variable** `todayCloses`
-   - **Match Text** `open` in *File* → **Count** → **Set Variable** `totalOpens`
-   - **Match Text** `close` in *File* → **Count** → **Set Variable** `totalCloses`
-   - **Show Result**: `Today: todayOpens opens / todayCloses closes` on one line,
-     `All time: totalOpens opens / totalCloses closes` on the next
-4. To check it with one tap, add a Shortcuts widget for "Fold Stats" to your Home Screen.
+1. **Add the script.** In Scriptable, tap **+**, paste in `scriptable/FoldCounter.js`, and name it
+   `Fold Counter`.
+2. **Shortcut for opens.** In Shortcuts, start a new shortcut and add the **When iPhone is Opened**
+   trigger. Leave **Automation** on and turn **Notify** off. Add Scriptable's **Run Script** action,
+   with Script set to `Fold Counter`, Parameter set to `open`, and **Run In App** off.
+3. **Shortcut for closes.** Make the same shortcut with the trigger set to **Closed** and the
+   parameter `close`.
+4. **Widget.** Long-press the Home Screen → **+** → Scriptable → pick the small or medium size.
+   Long-press the new widget → **Edit Widget** → set Script to `Fold Counter`. It also works as a
+   Lock Screen widget.
+
+The counts are saved in `fold-counter.json` in the Scriptable folder in iCloud Drive. Run the script
+inside Scriptable to see the counts, preview the widget, or reset.
 
 ## Option B: the native app (this repo)
 
@@ -74,5 +70,5 @@ same data. "Today" resets at midnight, and the all-time total keeps growing.
 These points haven't been confirmed on a real iPhone Duo yet:
 
 - Whether the automation also fires while the phone is locked, or only after Face ID unlocks it.
-- iOS limits how often a widget can refresh, so on heavy days the widget may lag behind the app.
-  The app always shows the exact count.
+- iOS limits how often a widget can refresh, so the widget can be a few minutes behind. The app
+  (or running the script in Scriptable) always shows the exact count.
